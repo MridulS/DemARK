@@ -39,10 +39,11 @@ import os
 import numpy as np
 from copy import deepcopy
 
-# %% {"code_folding": [0]}
+# %% {"code_folding": []}
 # Import needed tools from HARK
 
-from HARK.utilities import approxUniform, getPercentiles
+from HARK.distribution import approxUniform
+from HARK.utilities import getPercentiles
 from HARK.parallel import multiThreadCommands
 from HARK.estimation import minimizeNelderMead
 from HARK.ConsumptionSaving.ConsIndShockModel import *
@@ -94,7 +95,7 @@ for j in range(TypeCount):
     EstTypeList.append(deepcopy(BaseType))
     EstTypeList[-1](seed = j)
 
-# %% {"code_folding": [0]}
+# %% {"code_folding": []}
 # Define the objective function
 
 def FagerengObjFunc(center,spread,verbose=False):
@@ -119,7 +120,7 @@ def FagerengObjFunc(center,spread,verbose=False):
         Euclidean distance between simulated MPCs and (adjusted) Table 9 MPCs.
     '''
     # Give our consumer types the requested discount factor distribution
-    beta_set = approxUniform(N=TypeCount,bot=center-spread,top=center+spread)[1]
+    beta_set = approxUniform(N=TypeCount,bot=center-spread,top=center+spread).X
     for j in range(TypeCount):
         EstTypeList[j](DiscFac = beta_set[j])
 
@@ -183,19 +184,13 @@ def FagerengObjFunc(center,spread,verbose=False):
     return distance
 
 
-# %% {"code_folding": [0]}
+# %% {"code_folding": []}
 # Conduct the estimation
 
 guess = [0.92,0.03]
 f_temp = lambda x : FagerengObjFunc(x[0],x[1])
-opt_params = minimizeNelderMead(f_temp, guess, verbose=True)
+opt_params = minimizeNelderMead(f_temp, guess, verbose=False)
 print('Finished estimating for scaling factor of ' + str(AdjFactor) + ' and "splurge amount" of $' + str(1000*Splurge))
 print('Optimal (beta,nabla) is ' + str(opt_params) + ', simulated MPCs are:')
 dist = FagerengObjFunc(opt_params[0],opt_params[1],True)
 print('Distance from Fagereng et al Table 9 is ' + str(dist))
-
-# %%
-# Put your solution here
-
-# %%
-# Put your solution here
