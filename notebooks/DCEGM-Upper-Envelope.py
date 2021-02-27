@@ -9,8 +9,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: percent
-#       format_version: '1.3'
-#       jupytext_version: 1.6.0
+#       format_version: '1.2'
+#       jupytext_version: 1.2.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -24,26 +24,41 @@
 #     name: python
 #     nbconvert_exporter: python
 #     pygments_lexer: ipython3
-#     version: 3.7.4
+#     version: 3.6.9
+#   latex_envs:
+#     LaTeX_envs_menu_present: true
+#     autoclose: false
+#     autocomplete: false
+#     bibliofile: biblio.bib
+#     cite_by: apalike
+#     current_citInitial: 1
+#     eqLabelWithNumbers: true
+#     eqNumInitial: 1
+#     hotkeys:
+#       equation: Ctrl-E
+#       itemize: Ctrl-I
+#     labels_anchors: false
+#     latex_user_defs: false
+#     report_style_numbering: false
+#     user_envs_cfg: false
 # ---
 
 # %% [markdown]
 # # DCEGM Upper Envelope
 # ## ["The endogenous grid method for discrete-continuous dynamic choice models with (or without) taste shocks"](https://onlinelibrary.wiley.com/doi/abs/10.3982/QE643)
 #
-# <p style="text-align: center;"><small><small><small>For the following badges: GitHub does not allow click-through redirects; right-click to get the link, then paste into navigation bar</small></small></small></p>
+# <p style="text-align: center;"><small><small><small>GitHub does not allow click-through redirects; right-click to get the link, then paste into navigation bar</small></small></small></p>
 #
 # [![badge](https://img.shields.io/badge/Launch%20using%20-Econ--ARK-blue)](https://econ-ark.org/materials/dcegm-upper-envelope#launch)
 #
 #
-#
 # This notebook provides a simple introduction to the upper envelope calculation in the "DCEGM" algorithm <cite data-cite="6202365/4F64GG8F"></cite>. It takes the EGM method proposed in <cite data-cite="6202365/HQ6H9JEI"></cite>, and extends it to the mixed choice (discrete and continuous) case. It handles various constraints. It works on a 1-dimensional problems.
 #
-# The main challenge in the types of models considered in DCEGM is, that the first order conditions to the Bellman equations are no longer sufficient to find an optimum.  Though, they are still necessary in a broad class of models. This means that our EGM step will give us (resource, consumption) pairs that do fulfill the FOCs, but that are sub-optimal (there's another consumption choices for the same initial resources that gives a higher value).
+# The main challenge in the types of models considered in DCEGM is that the first order conditions to the Bellman equations are no longer sufficient to find an optimum.  The EGM step of the solution algorithm can therefore give us (resource, consumption) pairs that do fulfill the FOCs, but that are sub-optimal (there's another consumption choice for the same initial resources that gives a higher value).
 #
 # Take a consumption model formulated as:
 # $$
-# \max_{\{c_t\}^T_{t=1}} \sum^T_{t=1}\beta^t\cdot u(c_t)
+# \max_{\{\mathrm{c}_t\}^T_{t=0}}\mathbb{E}_{t}\left[ \sum^T_{t=0}\beta^t\cdot u(c_t)\right]
 # $$
 # given some initial condition on $x$ and some laws of motion for the states, though explicit references to states are omitted. Then, if we're in a class of models described in EGM
 # , we can show that
@@ -143,7 +158,7 @@ plt.show()
 #
 # The model represents an agent that lives for three periods and decides how much of his resources to consume in each of them. On the second period, he must additionally decide whether to hire a lawyer to write a will. Having a will has the upside of allowing the agent to leave a bequest in his third and last period of life, which gives him utility, but has the downside that the lawyer will charge a fraction of his period 3 resources.
 #
-# On each period, the agent receives a deterministic amount of resources $w$. The problem, therefore, is fully deterministic.
+# In each period, the agent receives a deterministic amount of resources $w$. The problem, therefore, is fully deterministic.
 #
 # I now present the model formally, solving it backwards.
 #
